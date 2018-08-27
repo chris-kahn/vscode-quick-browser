@@ -6,7 +6,7 @@
         "url": "https://githu.com/chris-kahn/vscode-quick-browser"
     },
     "description": "A Helm-like file browser for VS Code",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "publisher": "kahnpro",
     "engines": {
         "vscode": "^1.26.0"
@@ -37,23 +37,28 @@
                 "title": "Quick Browser - Toggle Hidden Files"
             }
         ],
-        "keybindings": [{
-            "command": "quick-browser.show",
-            "key": "alt+p",
-            "mac": "ctrl+p"
-        },{
-            "command": "quick-browser.back",
-            "key": "alt+left",
-            "mac": "ctrl+left"
-        }, {
-            "command": "quick-browser.forward",
-            "key": "alt+right",
-            "mac": "ctrl+right"
-        }, {
-            "command": "quick-browser.toggleHidden",
-            "key": "alt+.",
-            "mac": "ctrl+."
-        }]
+        "keybindings": [
+            {
+                "command": "quick-browser.show",
+                "key": "alt+p",
+                "mac": "ctrl+p"
+            },
+            {
+                "command": "quick-browser.back",
+                "key": "alt+left",
+                "mac": "ctrl+left"
+            },
+            {
+                "command": "quick-browser.forward",
+                "key": "alt+right",
+                "mac": "ctrl+right"
+            },
+            {
+                "command": "quick-browser.toggleHidden",
+                "key": "alt+.",
+                "mac": "ctrl+."
+            }
+        ]
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
