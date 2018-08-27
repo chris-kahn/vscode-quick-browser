@@ -1,6 +1,10 @@
 {
     "name": "quick-browser",
     "displayName": "Quick Browser",
+    "repository": {
+        "type": "git",
+        "url": "https://githu.com/chris-kahn/vscode-quick-browser"
+    },
     "description": "A Helm-like file browser for VS Code",
     "version": "1.0.0",
     "publisher": "kahnpro",
