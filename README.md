@@ -1,6 +1,6 @@
-# bridge README
+# quick-browser README
 
-This is the README for your extension "bridge". After writing up a brief description, we recommend including the following sections.
+This is a small extension for Visual Studio Code that replicates the file browsing capability of Helm in Emacs.
 
 ## Features
 

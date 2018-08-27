@@ -2,7 +2,7 @@
     "name": "quick-browser",
     "displayName": "Quick Browser",
     "description": "A Helm-like file browser for VS Code",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "publisher": "kahnpro",
     "engines": {
         "vscode": "^1.26.0"

@@ -32,7 +32,6 @@ function handleDidChangeValue(qp: vscode.QuickPick<vscode.QuickPickItem>) {
     return function (value: string) {
         if (value.length > 1 && value.slice(-1) === '/') {
             const newPath = path.normalize(qp.placeholder + '/' + value)
-            vscode.window.showInformationMessage(newPath)
             isDirectory(newPath).then(isDir => {
                 if (isDir) {
                     updateQuickPick(qp, newPath)
@@ -105,7 +104,6 @@ export function activate(context: vscode.ExtensionContext) {
         try {
             if (qpVisible) {
                 const parent = path.normalize(qp.placeholder + '/..')
-                vscode.window.showInformationMessage("quick-browser.back: " + parent)
                 updateQuickPick(qp, parent)
             }
         } catch (e) {
@@ -183,7 +181,6 @@ function updateQuickPick(qp: vscode.QuickPick<vscode.QuickPickItem>, dir: string
             .then(items => {
                 qp.placeholder = path.normalize(dir)
                 qp.value = ""
-                qp.show()
                 qp.items = items
                 qp.show()
                 qp.busy = false
