@@ -38,14 +38,21 @@
             }
         ],
         "keybindings": [{
+            "command": "quick-browser.show",
+            "key": "alt+p",
+            "mac": "ctrl+p"
+        },{
             "command": "quick-browser.back",
-            "key": "alt+left"
+            "key": "alt+left",
+            "mac": "ctrl+left"
         }, {
             "command": "quick-browser.forward",
-            "key": "alt+right"
+            "key": "alt+right",
+            "mac": "ctrl+right"
         }, {
             "command": "quick-browser.toggleHidden",
-            "key": "alt+."
+            "key": "alt+.",
+            "mac": "ctrl+."
         }]
     },
     "scripts": {
