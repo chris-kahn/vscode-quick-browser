@@ -52,10 +52,14 @@ function handleDidAccept(qp: vscode.QuickPick<vscode.QuickPickItem>) {
         isDirectory(newPath).then(isDir => {
             if (isDir) {
                 if (selectedLabel === ".") {
-                    vscode.commands.executeCommand(
-                        'vscode.openFolder',
-                        vscode.Uri.file(newPath),
-                        false
+                    const { workspaceFolders } = vscode.workspace
+                    vscode.workspace.updateWorkspaceFolders(
+                        workspaceFolders ? workspaceFolders.length : 0,
+                        null,
+                        { 
+                            uri: vscode.Uri.file(newPath),
+                            name: path.basename(newPath)
+                        }
                     )
                 }
                 else {
