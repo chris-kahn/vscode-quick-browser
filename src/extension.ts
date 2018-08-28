@@ -3,6 +3,8 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path'
 
+const home: string = path.normalize(process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'] || "/")
+
 function readdir(dir: fs.PathLike, showHidden: boolean): Promise<string[]> {
     return new Promise((resolve, reject) => {
         fs.readdir(dir, (err, files) => {
@@ -76,12 +78,11 @@ export function activate(context: vscode.ExtensionContext) {
     let disposable = vscode.commands.registerCommand('quick-browser.show', () => {
         const { window, workspace } = vscode
         let editor = window.activeTextEditor
-        let dir = path.dirname("~")
+        let dir = path.dirname(home)
         let initialSelection = []
 
         if (!editor) {
-            vscode.window.showErrorMessage("Quick Browser can only be called with an open editor")
-            dir = (workspace.workspaceFolders && workspace.workspaceFolders[0].uri.fsPath) || "~"
+            dir = (workspace.workspaceFolders && workspace.workspaceFolders[0].uri.fsPath) || home
         } else {
             let { scheme, fsPath } = editor.document.uri
             if (scheme === "file") {
@@ -89,7 +90,7 @@ export function activate(context: vscode.ExtensionContext) {
                 initialSelection.push({ label: editor.document.fileName })
             }
             else {
-                dir = (workspace.workspaceFolders && workspace.workspaceFolders[0].uri.fsPath) || "~"
+                dir = (workspace.workspaceFolders && workspace.workspaceFolders[0].uri.fsPath) || home
             }
         }
 
@@ -141,7 +142,7 @@ export function activate(context: vscode.ExtensionContext) {
         try {
             if (qpVisible) {
                 showHidden = !showHidden
-                updateQuickPick(qp, qp.placeholder || "~", showHidden)
+                updateQuickPick(qp, qp.placeholder || home, showHidden)
             }
         } catch (e) {
             vscode.window.showErrorMessage(e.message)
