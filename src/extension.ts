@@ -173,8 +173,8 @@ function updateQuickPick(qp: vscode.QuickPick<vscode.QuickPickItem>, dir: string
                 const files = items.filter(item => !item.isDir).sort(sortFn)
 
                 return [
-                    { label: ".", description: "(current directory)", isDir: true }, 
                     { label: "..", description: "(parent directory)", isDir: true }, 
+                    { label: ".", description: "(current directory)", isDir: true }, 
                     ...directories, 
                     ...files
                 ]
