@@ -1,8 +1,8 @@
 # quick-browser README
 
-This is a small extension for Visual Studio Code that replicates the file browsing capability of Helm in Emacs. When opened, it shows the contents of the current file's directory, and from there you can navigate around the filesystem to open another file.
+This is a small extension for Visual Studio Code that replicates the file browsing capability of Helm in Emacs. When opened, it shows the contents of the current file's directory, and from there you can navigate around the filesystem to open other files.
 
-I published this extension because I like Helm's way of browsing files in Emacs and wanted to play around with something similar in vsode. There may be bugs but feel free to create issues or PRs.
+I made this extension because I like Helm's way of browsing files in Emacs and wanted to have something similar in vsode. There may be bugs or things missing, but feel free to create issues or PRs.
 
 TODO: allow creation of new files and directories
 
@@ -18,8 +18,6 @@ The following commands are provided for keybinding:
 For the defaults, use alt on windows, or ctrl on macos.
 
 ## Release Notes
-
-Users appreciate release notes as you update your extension.
 
 ### 1.0.0
 
