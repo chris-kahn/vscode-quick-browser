@@ -3,6 +3,8 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path'
 
+type QuickPick = vscode.QuickPick<vscode.QuickPickItem>
+
 const home: string = path.normalize(process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'] || "/")
 
 function readdir(dir: fs.PathLike, showHidden: boolean): Promise<string[]> {
@@ -49,7 +51,16 @@ function handleDidAccept(qp: vscode.QuickPick<vscode.QuickPickItem>) {
         const newPath = path.normalize(qp.placeholder + '/' + selectedLabel)
         isDirectory(newPath).then(isDir => {
             if (isDir) {
-                updateQuickPick(qp, newPath)
+                if (selectedLabel === ".") {
+                    vscode.commands.executeCommand(
+                        'vscode.openFolder',
+                        vscode.Uri.file(newPath),
+                        false
+                    )
+                }
+                else {
+                    updateQuickPick(qp, newPath)
+                }
             }
             else {
                 const openPath = vscode.Uri.file(newPath)
@@ -77,21 +88,18 @@ export function activate(context: vscode.ExtensionContext) {
 
     let disposable = vscode.commands.registerCommand('quick-browser.show', () => {
         const { window, workspace } = vscode
+        const { workspaceFolders } = workspace
         let editor = window.activeTextEditor
-        let dir = path.dirname(home)
+        let dir = home
         let initialSelection = []
 
-        if (!editor) {
-            dir = (workspace.workspaceFolders && workspace.workspaceFolders[0].uri.fsPath) || home
-        } else {
-            let { scheme, fsPath } = editor.document.uri
-            if (scheme === "file") {
-                dir = path.dirname(fsPath)
-                initialSelection.push({ label: editor.document.fileName })
-            }
-            else {
-                dir = (workspace.workspaceFolders && workspace.workspaceFolders[0].uri.fsPath) || home
-            }
+        if (editor && editor.document.uri.scheme === "file") {
+            const { fsPath } = editor.document.uri
+            dir = path.dirname(fsPath)
+            initialSelection.push({ label: editor.document.fileName })
+        } 
+        else if (workspaceFolders && workspaceFolders.length > 0) {
+            dir = workspaceFolders[0].uri.fsPath
         }
 
         qp.selectedItems = initialSelection
@@ -155,7 +163,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(toggleHidden);
 }
 
-function updateQuickPick(qp: vscode.QuickPick<vscode.QuickPickItem>, dir: string, showHidden = false) {
+function updateQuickPick(qp: QuickPick, dir: string, showHidden = false) {
     qp.busy = true
     return readdir(dir, showHidden).then(files => {
         return Promise.all(files.map(file =>
