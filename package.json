@@ -6,7 +6,7 @@
         "url": "https://github.com/chris-kahn/vscode-quick-browser"
     },
     "description": "A Helm-like file browser for VS Code",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "publisher": "kahnpro",
     "engines": {
         "vscode": "^1.26.0"
