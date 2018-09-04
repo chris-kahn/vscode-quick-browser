@@ -52,15 +52,24 @@ function handleDidAccept(qp: vscode.QuickPick<vscode.QuickPickItem>) {
         isDirectory(newPath).then(isDir => {
             if (isDir) {
                 if (selectedLabel === ".") {
-                    const { workspaceFolders } = vscode.workspace
-                    vscode.workspace.updateWorkspaceFolders(
-                        workspaceFolders ? workspaceFolders.length : 0,
-                        null,
-                        { 
-                            uri: vscode.Uri.file(newPath),
-                            name: path.basename(newPath)
-                        }
-                    )
+                    const action = vscode.workspace.getConfiguration( "vscode-quick-browser" ).get( 'openCurrentFolderAction' );
+                    if( action === "open in same window" ) {
+                        vscode.commands.executeCommand( 'vscode.openFolder', new vscode.Uri( { scheme: 'file', path: qp.placeholder } ), false );
+                    }
+                    else if( action === "open in new window" ) {
+                        vscode.commands.executeCommand( 'vscode.openFolder', new vscode.Uri( { scheme: 'file', path: qp.placeholder } ), true );
+                    }
+                    else if( action === "open new folder in same window" ) {
+                        const { workspaceFolders } = vscode.workspace
+                        vscode.workspace.updateWorkspaceFolders(
+                            workspaceFolders ? workspaceFolders.length : 0,
+                            null,
+                            {
+                                uri: vscode.Uri.file(newPath),
+                                name: path.basename(newPath)
+                            }
+                        )
+                    }
                 }
                 else {
                     updateQuickPick(qp, newPath)

@@ -58,7 +58,24 @@
                 "key": "alt+.",
                 "mac": "ctrl+."
             }
-        ]
+        ],
+        "configuration": {
+            "type": "object",
+            "title": "vscode-quick-browser configuration",
+            "properties": {
+                "vscode-quick-browser.openCurrentFolderAction": {
+                    "type": "string",
+                    "description": "Action to take when selecting '. (current)'",
+                    "enum": [
+                        "none",
+                        "open in same window",
+                        "open in new window",
+                        "open new folder in same window"
+                    ],
+                    "default": "open new folder in same window"
+                }
+            }
+        }
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
