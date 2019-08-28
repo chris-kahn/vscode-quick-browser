@@ -3,7 +3,7 @@
     "displayName": "Quick Browser",
     "repository": {
         "type": "git",
-        "url": "https://github.com/chris-kahn/vscode-quick-browser"
+        "padding-left: 63px;url": "https://github.com/chris-kahn/vscode-quick-browser"
     },
     "description": "A Helm-like file browser for VS Code",
     "version": "1.4.0",
@@ -59,7 +59,29 @@
                 "key": "alt+.",
                 "mac": "ctrl+."
             }
-        ]
+        ],
+        "configuration": {
+            "type": "object",
+            "title": "vscode-quick-browser configuration",
+            "properties": {
+                "vscode-quick-browser.showCurrentDirectory": {
+                    "type": "boolean",
+                    "description": "Whether to show '. (current)'",
+                    "default": false
+                },
+                "vscode-quick-browser.openCurrentDirectoryAction": {
+                    "type": "string",
+                    "description": "Action to take when selecting '. (current)'",
+                    "enum": [
+                        "none",
+                        "open in same window",
+                        "open in new window",
+                        "open new folder in same window"
+                    ],
+                    "default": "open new folder in same window"
+                }
+            }
+        }
     },
     "scripts": {
         "vscode:prepublish": "yarn run compile",

@@ -34,7 +34,7 @@ function isDirectory(path: fs.PathLike): Promise<boolean> {
 }
 
 function handleDidChangeValue(qp: vscode.QuickPick<vscode.QuickPickItem>) {
-    return function(value: string) {
+    return function (value: string) {
         if (value.length > 1 && value.slice(-1) === '/') {
             const newPath = path.normalize(qp.placeholder + '/' + value)
             isDirectory(newPath).then((isDir) => {
@@ -47,22 +47,31 @@ function handleDidChangeValue(qp: vscode.QuickPick<vscode.QuickPickItem>) {
 }
 
 function handleDidAccept(qp: vscode.QuickPick<vscode.QuickPickItem>) {
-    return function() {
+    return function () {
         const selectedLabel = qp.selectedItems[0].label
         const newPath = path.normalize(qp.placeholder + '/' + selectedLabel)
         isDirectory(newPath)
             .then((isDir) => {
                 if (isDir) {
                     if (selectedLabel === '.') {
-                        const { workspaceFolders } = vscode.workspace
-                        vscode.workspace.updateWorkspaceFolders(
-                            workspaceFolders ? workspaceFolders.length : 0,
-                            null,
-                            {
-                                uri: vscode.Uri.file(newPath),
-                                name: path.basename(newPath)
-                            }
-                        )
+                        const action = vscode.workspace.getConfiguration("vscode-quick-browser").get('openCurrentDirectoryAction');
+                        if (action === "open in same window") {
+                            vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(qp.placeholder || "/"), false);
+                        }
+                        else if (action === "open in new window") {
+                            vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(qp.placeholder || "/"), true);
+                        }
+                        else if (action === "open new folder in same window") {
+                            const { workspaceFolders } = vscode.workspace
+                            vscode.workspace.updateWorkspaceFolders(
+                                workspaceFolders ? workspaceFolders.length : 0,
+                                null,
+                                {
+                                    uri: vscode.Uri.file(newPath),
+                                    name: path.basename(newPath)
+                                }
+                            )
+                        }
                     } else {
                         updateQuickPick(qp, newPath)
                     }
@@ -190,12 +199,18 @@ function updateQuickPick(qp: QuickPick, dir: string, showHidden = false) {
                     const directories = items.filter((item) => item.isDir).sort(sortFn)
                     const files = items.filter((item) => !item.isDir).sort(sortFn)
 
-                    return [
-                        { label: '..', description: '(parent directory)', isDir: true },
-                        { label: '.', description: '(current directory)', isDir: true },
-                        ...directories,
-                        ...files
-                    ]
+                    const showCurrent = vscode.workspace.getConfiguration("vscode-quick-browser").get('showCurrentDirectory')
+
+                    const newItems = [{ label: '..', description: '(parent directory)', isDir: true }]
+
+                    if (showCurrent) {
+                        newItems.push({ label: '.', description: '(current directory)', isDir: true })
+                    }
+
+                    newItems.push(...directories)
+                    newItems.push(...files)
+
+                    return newItems
                 })
                 .then((items) => {
                     qp.placeholder = path.normalize(dir)
@@ -211,4 +226,4 @@ function updateQuickPick(qp: QuickPick, dir: string, showHidden = false) {
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }
