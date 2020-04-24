@@ -47,17 +47,20 @@
             {
                 "command": "quick-browser.back",
                 "key": "alt+left",
-                "mac": "ctrl+left"
+                "mac": "ctrl+left",
+                "when": "!editorTextFocus"
             },
             {
                 "command": "quick-browser.forward",
                 "key": "alt+right",
-                "mac": "ctrl+right"
+                "mac": "ctrl+right",
+                "when": "!editorTextFocus"
             },
             {
                 "command": "quick-browser.toggleHidden",
                 "key": "alt+.",
-                "mac": "ctrl+."
+                "mac": "ctrl+.",
+                "when": "!editorTextFocus"
             }
         ],
         "configuration": {
