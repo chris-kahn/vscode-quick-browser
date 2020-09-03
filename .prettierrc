@@ -1,0 +1,27 @@
+{
+    "tabWidth": 4,
+    "printWidth": 100,
+    "singleQuote": true,
+    "semi": false,
+    "arrowParens": "always",
+    "overrides": [
+        {
+            "files": ["*.json", ".babelrc", ".lintstagedrc", ".prettierrc"],
+            "options": {
+                "parser": "json"
+            }
+        },
+        {
+            "files": "*.md",
+            "options": {
+                "parser": "markdown"
+            }
+        },
+        {
+            "files": ["*.ts", "*.tsx"],
+            "options": {
+                "parser": "typescript"
+            }
+        }
+    ]
+}

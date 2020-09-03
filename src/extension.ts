@@ -1,20 +1,21 @@
-'use strict';
-import * as vscode from 'vscode';
-import * as fs from 'fs';
+'use strict'
+import * as vscode from 'vscode'
+import * as fs from 'fs'
 import * as path from 'path'
 
 type QuickPick = vscode.QuickPick<vscode.QuickPickItem>
 
-const home: string = path.normalize(process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'] || "/")
+const home: string = path.normalize(
+    process.env[process.platform == 'win32' ? 'USERPROFILE' : 'HOME'] || '/'
+)
 
 function readdir(dir: fs.PathLike, showHidden: boolean): Promise<string[]> {
     return new Promise((resolve, reject) => {
         fs.readdir(dir, (err, files) => {
             if (err) {
                 reject(err)
-            }
-            else {
-                const filtered = showHidden ? files : files.filter(f => ! /^\..*/.test(f))
+            } else {
+                const filtered = showHidden ? files : files.filter((f) => !/^\..*/.test(f))
                 resolve(filtered)
             }
         })
@@ -36,7 +37,7 @@ function handleDidChangeValue(qp: vscode.QuickPick<vscode.QuickPickItem>) {
     return function (value: string) {
         if (value.length > 1 && value.slice(-1) === '/') {
             const newPath = path.normalize(qp.placeholder + '/' + value)
-            isDirectory(newPath).then(isDir => {
+            isDirectory(newPath).then((isDir) => {
                 if (isDir) {
                     updateQuickPick(qp, newPath)
                 }
@@ -50,33 +51,42 @@ function handleDidAccept(qp: vscode.QuickPick<vscode.QuickPickItem>) {
         const selectedLabel = qp.activeItems[0].label
         const selectedPath = selectedLabel.split(' ')[1] ?? selectedLabel;
         const newPath = path.normalize(qp.placeholder + '/' + selectedPath)
-        isDirectory(newPath).then(isDir => {
-            if (isDir) {
-                if (selectedPath === ".") {
-                    const { workspaceFolders } = vscode.workspace
-                    vscode.workspace.updateWorkspaceFolders(
-                        workspaceFolders ? workspaceFolders.length : 0,
-                        null,
-                        {
-                            uri: vscode.Uri.file(newPath),
-                            name: path.basename(newPath)
+        isDirectory(newPath)
+            .then((isDir) => {
+                if (isDir) {
+                    if (selectedPath === '.') {
+                        const action = vscode.workspace.getConfiguration("vscode-quick-browser").get('openCurrentDirectoryAction');
+                        if (action === "open in same window") {
+                            vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(qp.placeholder || "/"), false);
                         }
-                    )
+                        else if (action === "open in new window") {
+                            vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(qp.placeholder || "/"), true);
+                        }
+                        else if (action === "open new folder in same window") {
+                            const { workspaceFolders } = vscode.workspace
+                            vscode.workspace.updateWorkspaceFolders(
+                                workspaceFolders ? workspaceFolders.length : 0,
+                                null,
+                                {
+                                    uri: vscode.Uri.file(newPath),
+                                    name: path.basename(newPath)
+                                }
+                            )
+                        }
+                    } else {
+                        updateQuickPick(qp, newPath)
+                    }
+                } else {
+                    const openPath = vscode.Uri.file(newPath)
+                    qp.hide()
+                    vscode.workspace.openTextDocument(openPath).then((doc) => {
+                        return vscode.window.showTextDocument(doc)
+                    })
                 }
-                else {
-                    updateQuickPick(qp, newPath)
-                }
-            }
-            else {
-                const openPath = vscode.Uri.file(newPath)
-                qp.hide()
-                vscode.workspace.openTextDocument(openPath).then(doc => {
-                    return vscode.window.showTextDocument(doc)
-                })
-            }
-        }).catch(err => {
-            vscode.window.showErrorMessage(err)
-        })
+            })
+            .catch((err) => {
+                vscode.window.showErrorMessage(err)
+            })
     }
 }
 
@@ -89,7 +99,9 @@ export function activate(context: vscode.ExtensionContext) {
 
     qp.onDidChangeValue(handleDidChangeValue(qp))
     qp.onDidAccept(handleDidAccept(qp))
-    qp.onDidHide(() => { qpVisible = false })
+    qp.onDidHide(() => {
+        qpVisible = false
+    })
 
     let disposable = vscode.commands.registerCommand('tiller.show', () => {
         const { window, workspace } = vscode
@@ -98,7 +110,7 @@ export function activate(context: vscode.ExtensionContext) {
         let dir = home
         let initialSelection = []
 
-        if (editor && editor.document.uri.scheme === "file") {
+        if (editor && editor.document.uri.scheme === 'file') {
             const { fsPath } = editor.document.uri
             dir = path.dirname(fsPath)
             initialSelection.push({ label: editor.document.fileName })
@@ -112,7 +124,7 @@ export function activate(context: vscode.ExtensionContext) {
         updateQuickPick(qp, dir).then(() => {
             qpVisible = true
         })
-    });
+    })
 
     let back = vscode.commands.registerCommand('tiller.back', () => {
         try {
@@ -132,20 +144,21 @@ export function activate(context: vscode.ExtensionContext) {
                 const selectedPath = selectedLabel.split(' ')[1] ?? selectedLabel;
                 const newPath = path.normalize(qp.placeholder + '/' + selectedPath)
 
-                isDirectory(newPath).then(isDir => {
-                    if (isDir) {
-                        updateQuickPick(qp, newPath, showHidden)
-                    }
-                    else {
-                        const openPath = vscode.Uri.file(newPath)
-                        qp.hide()
-                        vscode.workspace.openTextDocument(openPath).then(doc => {
-                            return vscode.window.showTextDocument(doc)
-                        })
-                    }
-                }).catch(err => {
-                    vscode.window.showErrorMessage(err)
-                })
+                isDirectory(newPath)
+                    .then((isDir) => {
+                        if (isDir) {
+                            updateQuickPick(qp, newPath, showHidden)
+                        } else {
+                            const openPath = vscode.Uri.file(newPath)
+                            qp.hide()
+                            vscode.workspace.openTextDocument(openPath).then((doc) => {
+                                return vscode.window.showTextDocument(doc)
+                            })
+                        }
+                    })
+                    .catch((err) => {
+                        vscode.window.showErrorMessage(err)
+                    })
             }
         } catch (e) {
             vscode.window.showErrorMessage(e.message)
@@ -163,53 +176,61 @@ export function activate(context: vscode.ExtensionContext) {
         }
     })
 
-    context.subscriptions.push(disposable);
-    context.subscriptions.push(back);
-    context.subscriptions.push(forward);
-    context.subscriptions.push(toggleHidden);
+    context.subscriptions.push(disposable)
+    context.subscriptions.push(back)
+    context.subscriptions.push(forward)
+    context.subscriptions.push(toggleHidden)
 }
-
-type Item = { label: string, description: string, isDir: boolean };
 
 function updateQuickPick(qp: QuickPick, dir: string, showHidden = false) {
     qp.busy = true
-    return readdir(dir, showHidden).then(files => {
-        return Promise.all(files.map(file =>
-            isDirectory(`${dir}/${file}`).then(isDir => {
-                const path = isDir ? `${file}/` : file;
-                const label = isDir ? `$(folder) ${path}` : `$(file) ${path}`;
-                return {
-                    label,
-                    description: "",
-                    isDir
-                }
-            })
-        ))
-            .then((items: Array<Item>) => {
-                const sortFn = (a: Item, b: Item) => a.label.localeCompare(b.label)
+    return readdir(dir, showHidden)
+        .then((files) => {
+            return Promise.all(
+                files.map((file) =>
+                    isDirectory(`${dir}/${file}`).then((isDir) => {
+                        const path = isDir ? `${file}/` : file;
+                        const label = isDir ? `$(folder) ${path}` : `$(file) ${path}`;
+                        return {
+                            label,
+                            description: '',
+                            isDir
+                        }
+                    })
+                )
+            )
+                .then((items) => {
+                    type Item = { label: string }
+                    const sortFn = (a: Item, b: Item) => a.label.localeCompare(b.label)
 
-                const directories = items.filter(item => item.isDir).sort(sortFn)
-                const files = items.filter(item => !item.isDir).sort(sortFn)
+                    const directories = items.filter((item) => item.isDir).sort(sortFn)
+                    const files = items.filter((item) => !item.isDir).sort(sortFn)
 
-                return [
-                    { label: "..", description: "(parent directory)", isDir: true },
-                    { label: ".", description: "(current directory)", isDir: true },
-                    ...directories,
-                    ...files
-                ]
-            })
-            .then(items => {
-                qp.placeholder = path.normalize(dir)
-                qp.value = ""
-                qp.items = items
-                qp.show()
-                qp.busy = false
-            })
-    }).catch(err => {
-        vscode.window.showErrorMessage(err.message)
-    })
+                    const showCurrent = vscode.workspace.getConfiguration("vscode-quick-browser").get('showCurrentDirectory')
+
+                    const newItems = [{ label: '..', description: '(parent directory)', isDir: true }]
+
+                    if (showCurrent) {
+                        newItems.push({ label: '.', description: '(current directory)', isDir: true })
+                    }
+
+                    newItems.push(...directories)
+                    newItems.push(...files)
+
+                    return newItems
+                })
+                .then((items) => {
+                    qp.placeholder = path.normalize(dir)
+                    qp.value = ''
+                    qp.items = items
+                    qp.show()
+                    qp.busy = false
+                })
+        })
+        .catch((err) => {
+            vscode.window.showErrorMessage(err.message)
+        })
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {
-}
+export function deactivate() { }
