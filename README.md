@@ -13,9 +13,9 @@ Tiller is a keyboard-based file browser for Visual Studio Code, which should be 
 * `tiller.forward`: open a file or go into a directory (right)
 * `tiller.toggleHidden`: show or hide dotfiles (alt/ctrl+.)
 
+For the defaults, use alt on windows, or ctrl on macos.
+
 ### Settings
 
 * `vscode-tiller.showCurrentDirectory`: Whether to show '. (current)' for the current directory. `true|false`
 * `vscode-tiller.openCurrentDirectoryAction`: What to do when selecting the current directory. Available options: `"none" | "open in same window" | "open in new window" | "open new folder in same window"`
-
-For the defaults, use alt on windows, or ctrl on macos.
