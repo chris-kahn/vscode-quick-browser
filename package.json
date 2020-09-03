@@ -1,60 +1,60 @@
 {
-    "name": "quick-browser",
-    "displayName": "Quick Browser",
+    "name": "tiller",
+    "displayName": "Tiller",
     "repository": {
         "type": "git",
-        "url": "https://github.com/chris-kahn/vscode-quick-browser"
+        "url": "https://github.com/chris-kahn/vscode-tiller"
     },
     "description": "A Helm-like file browser for VS Code",
     "version": "1.0.5",
     "publisher": "kahnpro",
     "engines": {
-        "vscode": "^1.26.0"
+        "vscode": "^1.48.0"
     },
     "categories": [
         "Other"
     ],
     "activationEvents": [
-        "onCommand:quick-browser.show"
+        "onCommand:tiller.show"
     ],
     "main": "./out/extension",
     "contributes": {
         "commands": [
             {
-                "command": "quick-browser.show",
-                "title": "Quick Browser"
+                "command": "tiller.show",
+                "title": "Tiller"
             },
             {
-                "command": "quick-browser.back",
-                "title": "Quick Browser - Up a directory"
+                "command": "tiller.back",
+                "title": "Tiller - Up a directory"
             },
             {
-                "command": "quick-browser.forward",
-                "title": "Quick Browser - Open directory or file"
+                "command": "tiller.forward",
+                "title": "Tiller - Open directory or file"
             },
             {
-                "command": "quick-browser.toggleHidden",
-                "title": "Quick Browser - Toggle Hidden Files"
+                "command": "tiller.toggleHidden",
+                "title": "Tiller - Toggle Hidden Files"
             }
         ],
         "keybindings": [
             {
-                "command": "quick-browser.show",
+                "command": "tiller.show",
                 "key": "alt+p",
                 "mac": "ctrl+p"
             },
             {
-                "command": "quick-browser.back",
-                "key": "alt+left",
-                "mac": "ctrl+left"
+                "command": "tiller.back",
+                "key": "left",
+                "mac": "left"
             },
             {
-                "command": "quick-browser.forward",
-                "key": "alt+right",
-                "mac": "ctrl+right"
+                "command": "tiller.forward",
+                "key": "right",
+                "mac": "right"
             },
             {
-                "command": "quick-browser.toggleHidden",
+                "command": "tiller.toggleHidden",
                 "key": "alt+.",
                 "mac": "ctrl+."
             }
@@ -64,14 +64,14 @@
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install",
-        "test": "npm run compile && node ./node_modules/vscode/bin/test"
+        "test": "npm run compile && node ./out/test/index.js"
     },
     "devDependencies": {
-        "typescript": "^2.6.1",
-        "vscode": "^1.1.21",
-        "tslint": "^5.8.0",
-        "@types/node": "^8.10.25",
-        "@types/mocha": "^2.2.42"
+        "@types/mocha": "^2.2.42",
+        "@types/node": "^13.13.0",
+        "@types/vscode": "^1.48.0",
+        "tslint": "^6.1.3",
+        "typescript": "^4.0.2",
+        "vscode-test": "^1.4.0"
     }
 }

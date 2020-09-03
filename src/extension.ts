@@ -14,7 +14,7 @@ function readdir(dir: fs.PathLike, showHidden: boolean): Promise<string[]> {
                 reject(err)
             }
             else {
-            const filtered = showHidden ? files : files.filter(f => ! /^\..*/.test(f))
+                const filtered = showHidden ? files : files.filter(f => ! /^\..*/.test(f))
                 resolve(filtered)
             }
         })
@@ -32,7 +32,7 @@ function isDirectory(path: fs.PathLike): Promise<boolean> {
     })
 }
 
-function handleDidChangeValue(qp: vscode.QuickPick<vscode.QuickPickItem>) { 
+function handleDidChangeValue(qp: vscode.QuickPick<vscode.QuickPickItem>) {
     return function (value: string) {
         if (value.length > 1 && value.slice(-1) === '/') {
             const newPath = path.normalize(qp.placeholder + '/' + value)
@@ -47,16 +47,17 @@ function handleDidChangeValue(qp: vscode.QuickPick<vscode.QuickPickItem>) {
 
 function handleDidAccept(qp: vscode.QuickPick<vscode.QuickPickItem>) {
     return function () {
-        const selectedLabel = qp.selectedItems[0].label
-        const newPath = path.normalize(qp.placeholder + '/' + selectedLabel)
+        const selectedLabel = qp.activeItems[0].label
+        const selectedPath = selectedLabel.split(' ')[1] ?? selectedLabel;
+        const newPath = path.normalize(qp.placeholder + '/' + selectedPath)
         isDirectory(newPath).then(isDir => {
             if (isDir) {
-                if (selectedLabel === ".") {
+                if (selectedPath === ".") {
                     const { workspaceFolders } = vscode.workspace
                     vscode.workspace.updateWorkspaceFolders(
                         workspaceFolders ? workspaceFolders.length : 0,
                         null,
-                        { 
+                        {
                             uri: vscode.Uri.file(newPath),
                             name: path.basename(newPath)
                         }
@@ -90,7 +91,7 @@ export function activate(context: vscode.ExtensionContext) {
     qp.onDidAccept(handleDidAccept(qp))
     qp.onDidHide(() => { qpVisible = false })
 
-    let disposable = vscode.commands.registerCommand('quick-browser.show', () => {
+    let disposable = vscode.commands.registerCommand('tiller.show', () => {
         const { window, workspace } = vscode
         const { workspaceFolders } = workspace
         let editor = window.activeTextEditor
@@ -101,7 +102,7 @@ export function activate(context: vscode.ExtensionContext) {
             const { fsPath } = editor.document.uri
             dir = path.dirname(fsPath)
             initialSelection.push({ label: editor.document.fileName })
-        } 
+        }
         else if (workspaceFolders && workspaceFolders.length > 0) {
             dir = workspaceFolders[0].uri.fsPath
         }
@@ -113,7 +114,7 @@ export function activate(context: vscode.ExtensionContext) {
         })
     });
 
-    let back = vscode.commands.registerCommand('quick-browser.back', () => {
+    let back = vscode.commands.registerCommand('tiller.back', () => {
         try {
             if (qpVisible) {
                 const parent = path.normalize(qp.placeholder + '/..')
@@ -124,11 +125,12 @@ export function activate(context: vscode.ExtensionContext) {
         }
     })
 
-    let forward = vscode.commands.registerCommand('quick-browser.forward', () => {
+    let forward = vscode.commands.registerCommand('tiller.forward', () => {
         try {
             if (qpVisible) {
                 const selectedLabel = qp.activeItems[0].label
-                const newPath = path.normalize(qp.placeholder + '/' + selectedLabel)
+                const selectedPath = selectedLabel.split(' ')[1] ?? selectedLabel;
+                const newPath = path.normalize(qp.placeholder + '/' + selectedPath)
 
                 isDirectory(newPath).then(isDir => {
                     if (isDir) {
@@ -150,7 +152,7 @@ export function activate(context: vscode.ExtensionContext) {
         }
     })
 
-    let toggleHidden = vscode.commands.registerCommand('quick-browser.toggleHidden', () => {
+    let toggleHidden = vscode.commands.registerCommand('tiller.toggleHidden', () => {
         try {
             if (qpVisible) {
                 showHidden = !showHidden
@@ -167,27 +169,32 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(toggleHidden);
 }
 
+type Item = { label: string, description: string, isDir: boolean };
+
 function updateQuickPick(qp: QuickPick, dir: string, showHidden = false) {
     qp.busy = true
     return readdir(dir, showHidden).then(files => {
         return Promise.all(files.map(file =>
-            isDirectory(`${dir}/${file}`).then(isDir => ({
-                label: `${file}${isDir ? '/' : ''}`,
-                description: "",
-                isDir
-            }))
+            isDirectory(`${dir}/${file}`).then(isDir => {
+                const path = isDir ? `${file}/` : file;
+                const label = isDir ? `$(folder) ${path}` : `$(file) ${path}`;
+                return {
+                    label,
+                    description: "",
+                    isDir
+                }
+            })
         ))
-            .then(items => {
-                type Item = { label: string }
+            .then((items: Array<Item>) => {
                 const sortFn = (a: Item, b: Item) => a.label.localeCompare(b.label)
-                
+
                 const directories = items.filter(item => item.isDir).sort(sortFn)
                 const files = items.filter(item => !item.isDir).sort(sortFn)
 
                 return [
-                    { label: "..", description: "(parent directory)", isDir: true }, 
-                    { label: ".", description: "(current directory)", isDir: true }, 
-                    ...directories, 
+                    { label: "..", description: "(parent directory)", isDir: true },
+                    { label: ".", description: "(current directory)", isDir: true },
+                    ...directories,
                     ...files
                 ]
             })
