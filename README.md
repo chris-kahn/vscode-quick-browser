@@ -9,8 +9,8 @@ Tiller is a keyboard-based file browser for Visual Studio Code, which should be 
 ### Keybindings
 
 * `tiller.show`: open the palette with Tiller (alt/ctrl+p)
-* `tiller.back`: go up to the parent directory (alt/ctrl+left)
-* `tiller.forward`: open a file or go into a directory (alt/ctrl+right)
+* `tiller.back`: go up to the parent directory (left)
+* `tiller.forward`: open a file or go into a directory (right)
 * `tiller.toggleHidden`: show or hide dotfiles (alt/ctrl+.)
 
 ### Settings
