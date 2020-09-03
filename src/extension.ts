@@ -55,7 +55,7 @@ function handleDidAccept(qp: vscode.QuickPick<vscode.QuickPickItem>) {
             .then((isDir) => {
                 if (isDir) {
                     if (selectedPath === '.') {
-                        const action = vscode.workspace.getConfiguration("vscode-quick-browser").get('openCurrentDirectoryAction');
+                        const action = vscode.workspace.getConfiguration("vscode-tiller").get('openCurrentDirectoryAction');
                         if (action === "open in same window") {
                             vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(qp.placeholder || "/"), false);
                         }
@@ -206,7 +206,7 @@ function updateQuickPick(qp: QuickPick, dir: string, showHidden = false) {
                     const directories = items.filter((item) => item.isDir).sort(sortFn)
                     const files = items.filter((item) => !item.isDir).sort(sortFn)
 
-                    const showCurrent = vscode.workspace.getConfiguration("vscode-quick-browser").get('showCurrentDirectory')
+                    const showCurrent = vscode.workspace.getConfiguration("vscode-tiller").get('showCurrentDirectory')
 
                     const newItems = [{ label: '..', description: '(parent directory)', isDir: true }]
 

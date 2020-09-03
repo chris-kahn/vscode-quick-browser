@@ -65,14 +65,14 @@
         ],
         "configuration": {
             "type": "object",
-            "title": "vscode-quick-browser configuration",
+            "title": "vscode-tiller configuration",
             "properties": {
-                "vscode-quick-browser.showCurrentDirectory": {
+                "vscode-tiller.showCurrentDirectory": {
                     "type": "boolean",
                     "description": "Whether to show '. (current)'",
                     "default": false
                 },
-                "vscode-quick-browser.openCurrentDirectoryAction": {
+                "vscode-tiller.openCurrentDirectoryAction": {
                     "type": "string",
                     "description": "Action to take when selecting '. (current)'",
                     "enum": [
