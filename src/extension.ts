@@ -49,7 +49,7 @@ function handleDidChangeValue(qp: vscode.QuickPick<vscode.QuickPickItem>) {
 function handleDidAccept(qp: vscode.QuickPick<vscode.QuickPickItem>) {
     return function () {
         const selectedLabel = qp.activeItems[0].label
-        const selectedPath = selectedLabel.split(' ')[1] ?? selectedLabel;
+        const selectedPath = selectedLabel.replace(/^\$\([A-Za-z-]+\) /, "")
         const newPath = path.normalize(qp.placeholder + '/' + selectedPath)
         isDirectory(newPath)
             .then((isDir) => {
@@ -141,7 +141,7 @@ export function activate(context: vscode.ExtensionContext) {
         try {
             if (qpVisible) {
                 const selectedLabel = qp.activeItems[0].label
-                const selectedPath = selectedLabel.split(' ')[1] ?? selectedLabel;
+                const selectedPath = selectedLabel.replace(/^\$\([A-Za-z-]+\) /, "")
                 const newPath = path.normalize(qp.placeholder + '/' + selectedPath)
 
                 isDirectory(newPath)
