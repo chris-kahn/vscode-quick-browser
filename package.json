@@ -8,6 +8,7 @@
     "description": "A Helm-like file browser for VS Code",
     "version": "1.5.2",
     "publisher": "maplefactory",
+    "icon": "images/icon.png",
     "engines": {
         "vscode": "^1.48.0"
     },
