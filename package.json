@@ -7,7 +7,7 @@
     },
     "description": "A Helm-like file browser for VS Code",
     "version": "1.5.0",
-    "publisher": "kahnpro",
+    "publisher": "maplefactory",
     "engines": {
         "vscode": "^1.48.0"
     },
@@ -45,13 +45,13 @@
                 "mac": "ctrl+p"
             },
             {
-                "command": "quick-browser.back",
+                "command": "tiller.back",
                 "key": "left",
                 "mac": "left",
                 "when": "!editorTextFocus"
             },
             {
-                "command": "quick-browser.forward",
+                "command": "tiller.forward",
                 "key": "right",
                 "mac": "right",
                 "when": "!editorTextFocus"
