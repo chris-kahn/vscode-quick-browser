@@ -5,7 +5,7 @@ import { updateQuickPick } from './updateQuickPick'
 import { openSelected } from './utils'
 
 const home: string = path.normalize(
-    process.env[process.platform == 'win32' ? 'USERPROFILE' : 'HOME'] || '/'
+    process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME'] || '/'
 )
 
 export function commandShow(tiller: Tiller) {
