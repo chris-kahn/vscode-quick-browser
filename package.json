@@ -6,7 +6,7 @@
         "url": "https://github.com/chris-kahn/vscode-tiller"
     },
     "description": "A Helm-like file browser for VS Code",
-    "version": "1.7.0",
+    "version": "1.8.0",
     "publisher": "maplefactory",
     "icon": "images/icon.png",
     "engines": {
