@@ -6,14 +6,18 @@
         "url": "https://github.com/chris-kahn/vscode-tiller"
     },
     "description": "A Helm-like file browser for VS Code",
-    "version": "1.6.3",
+    "version": "1.7.0",
     "publisher": "maplefactory",
     "icon": "images/icon.png",
     "engines": {
         "vscode": "^1.48.0"
     },
-    "categories": ["Other"],
-    "activationEvents": ["onCommand:tiller.show"],
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onCommand:tiller.show"
+    ],
     "license": "GPL-3.0-only",
     "main": "./out/extension",
     "contributes": {
