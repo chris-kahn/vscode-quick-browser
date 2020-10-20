@@ -19,7 +19,7 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import { Tiller } from './types'
-import { openSelected, updateQuickPick } from './utils'
+import { openSelected, updateQuickPick, setContext } from './utils'
 
 const home: string = path.normalize(
     process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME'] || '/'
@@ -27,6 +27,7 @@ const home: string = path.normalize(
 
 export function commandShow(tiller: Tiller) {
     return async function handleCommandShow() {
+        setContext(true);
         const { window, workspace } = vscode
         const { workspaceFolders } = workspace
         let editor = window.activeTextEditor

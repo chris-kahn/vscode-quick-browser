@@ -12,12 +12,8 @@
     "engines": {
         "vscode": "^1.48.0"
     },
-    "categories": [
-        "Other"
-    ],
-    "activationEvents": [
-        "onCommand:tiller.show"
-    ],
+    "categories": ["Other"],
+    "activationEvents": ["onCommand:tiller.show"],
     "license": "GPL-3.0-only",
     "main": "./out/extension",
     "contributes": {
@@ -49,19 +45,19 @@
                 "command": "tiller.back",
                 "key": "left",
                 "mac": "left",
-                "when": "!editorTextFocus"
+                "when": "inTiller"
             },
             {
                 "command": "tiller.forward",
                 "key": "right",
                 "mac": "right",
-                "when": "!editorTextFocus"
+                "when": "inTiller"
             },
             {
                 "command": "tiller.toggleHidden",
                 "key": "alt+.",
                 "mac": "ctrl+.",
-                "when": "!editorTextFocus"
+                "when": "inTiller"
             }
         ],
         "configuration": {

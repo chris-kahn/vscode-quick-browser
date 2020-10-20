@@ -22,6 +22,7 @@ import * as vscode from 'vscode'
 import { Tiller } from './types'
 import { commandBack, commandForward, commandToggleHidden, commandShow } from './commands'
 import { handleDidChangeValue, handleDidAccept } from './events'
+import { setContext } from './utils'
 
 export async function activate(context: vscode.ExtensionContext) {
     const tiller: Tiller = {
@@ -33,6 +34,7 @@ export async function activate(context: vscode.ExtensionContext) {
     tiller.quickPick.onDidChangeValue(handleDidChangeValue(tiller))
     tiller.quickPick.onDidAccept(handleDidAccept(tiller))
     tiller.quickPick.onDidHide(() => {
+        setContext(false);
         tiller.visible = false
     })
 

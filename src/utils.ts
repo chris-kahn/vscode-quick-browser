@@ -157,3 +157,7 @@ export async function updateQuickPick(tiller: Tiller, dir: string) {
         vscode.window.showErrorMessage(err.message)
     }
 }
+
+export function setContext(state: boolean) {
+    vscode.commands.executeCommand("setContext", "inTiller", state);
+}
